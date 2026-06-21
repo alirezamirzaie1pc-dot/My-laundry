@@ -1164,7 +1164,8 @@
   /* ============================================================
      INVOICE HISTORY (in-memory, persists for this browser session)
      ============================================================ */
-  const invoiceHistory = [];
+  const invoiceHistory = JSON.parse(localStorage.getItem('invoiceHistory')||'[]');
+function persistHistory(){localStorage.setItem('invoiceHistory',JSON.stringify(invoiceHistory));}
 
   function paymentClass(status){
     if (status === 'پرداخت شده') return 'paid';
@@ -1290,6 +1291,7 @@
       payStatus, items, subtotal, note
     };
     invoiceHistory.push(record);
+    persistHistory();
     renderHistory();
 
     renderInvoiceFromRecord(record);
