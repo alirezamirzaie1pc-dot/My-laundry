@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فاکتور خشکشویی سپید</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap');
+
+  :root{
+    --indigo-deep:   #1d3557;
+    --indigo-mid:    #2a4a7f;
+    --steam-white:   #f7f8fa;
+    --linen:         #eef1f5;
+    --soap-blue:     #4f86c6;
+    --gold-trim:     #b7903f;
+    --ink:           #1a2233;
+    --ink-soft:      #5b6577;
+    --line:          #d7dde6;
+    --paper:         #ffffff;
+    --danger:        #b34a4a;
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    font-family:'Vazirmatn', Tahoma, sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(79,134,198,0.10), transparent 40%),
+      radial-gradient(circle at 88% 92%, rgba(183,144,63,0.08), transparent 45%),
+      var(--linen);
+    color: var(--ink);
+    min-height:100vh;
+    padding: 28px 16px 60px;
+  }
+
+  .app{
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  /* ===== Header / brand bar ===== */
+  .brand-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+  }
+  .brand-bar h1{
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--indigo-deep);
+    margin:0;
+  }
+  .brand-bar p{
+    margin:2px 0 0;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+  .bubble-mark{
+    width: 38px; height:38px; border-radius:50%;
+    background: linear-gradient(135deg, var(--soap-blue), var(--indigo-deep));
+    display:inline-flex; align-items:center; justify-content:center;
+    box-shadow: 0 4px 14px rgba(29,53,87,0.25);
+    flex-shrink:0;
+  }
+  .bubble-mark svg{ width:20px; height:20px; }
+  .brand-left{ display:flex; align-items:center; gap:10px; }
+
+  /* ===== Card shell ===== */
+  .card{
+    background: var(--paper);
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(20,30,50,0.04), 0 18px 40px -22px rgba(20,30,50,0.28);
+    overflow:hidden;
+    border: 1px solid var(--line);
+  }
+
+  /* ===== Form section ===== */
+  .form-section{ padding: 26px 26px 10px; }
+  .section-title{
+    display:flex; align-items:center; gap:10px;
+    font-size:14px; font-weight:700; color: var(--indigo-deep);
+    margin: 0 0 16px;
+    padding-bottom:10px;
+    border-bottom: 1px dashed var(--line);
+  }
+  .section-title .num{
+    width:22px;height:22px;border-radius:6px;
+    background: var(--indigo-deep); color:#fff;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:12px; font-weight:800;
+  }
+
+  .grid2{
+    display:grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  }
+  .field{ margin-bottom:14px; display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12.5px; font-weight:600; color: var(--ink-soft); }
+  .field input, .field select{
+    border:1px solid var(--line);
+    background: var(--steam-white);
+    border-radius:10px;
+    padding:10px 12px;
+    font-family:inherit;
+    font-size:14px;
+    color: var(--ink);
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  .field input:focus, .field select:focus{
+    outline:none;
+    border-color: var(--soap-blue);
+    background:#fff;
+    box-shadow: 0 0 0 3px rgba(79,134,198,0.15);
+  }
+
+  /* ===== Items table builder ===== */
+  .items-box{
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    margin-bottom: 18px;
+  }
+  table.items{
+    width:100%;
+    border-collapse: collapse;
+    font-size:13.5px;
+  }
+  table.items thead th{
+    background: var(--indigo-deep);
+    color:#fff;
+    font-weight:700;
+    font-size:12.5px;
+    padding:10px 8px;
+    text-align:center;
+  }
+  table.items tbody td{
+    padding:8px 6px;
+    border-bottom:1px solid var(--line);
+    text-align:center;
+    vertical-align:middle;
+  }
+  table.items tbody tr:last-child td{ border-bottom:none; }
+  table.items tbody tr:nth-child(even){ background: #fbfcfe; }
+
+  table.items input{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:7px 8px;
+    font-family:inherit;
+    font-size:13.5px;
+    background:#fff;
+    text-align:center;
+  }
+  table.items input:focus{
+    outline:none; border-color: var(--soap-blue);
+    box-shadow: 0 0 0 3px rgba(79,134,198,0.15);
+  }
+  table.items input.item-name{ text-align: right; }
+
+  .row-amount{ font-weight:700; color: var(--indigo-deep); white-space:nowrap; }
+  .remove-row{
+    background: none; border:none; cursor:pointer;
+    color: var(--danger); font-size:16px; line-height:1;
+    width:28px;height:28px;border-radius:8px;
+    display:inline-flex; align-items:center; justify-content:center;
+    transition: background .15s;
+  }
+  .remove-row:hover{ background: rgba(179,74,74,0.1); }
+
+  .items-toolbar{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 12px; background: var(--steam-white);
+  }
+  .add-row-btn{
+    border:1px dashed var(--soap-blue);
+    background:#fff;
+    color: var(--indigo-deep);
+    font-family:inherit;
+    font-size:12.5px;
+    font-weight:700;
+    padding:7px 14px;
+    border-radius:9px;
+    cursor:pointer;
+    transition: background .15s, border-color .15s;
+  }
+  .add-row-btn:hover{ background: rgba(79,134,198,0.08); }
+
+  .quick-total{
+    font-size:12.5px; color: var(--ink-soft); font-weight:600;
+  }
+  .quick-total b{ color: var(--indigo-deep); font-size:14px; }
+
+  .actions{
+    display:flex; gap:10px; justify-content:flex-end;
+    padding: 6px 26px 26px;
+  }
+  .btn{
+    font-family:inherit;
+    font-size:14px; font-weight:700;
+    padding:12px 22px;
+    border-radius:11px;
+    cursor:pointer;
+    border:none;
+    transition: transform .1s, box-shadow .15s, opacity .15s;
+  }
+  .btn:active{ transform: translateY(1px); }
+  .btn-primary{
+    background: linear-gradient(135deg, var(--indigo-mid), var(--indigo-deep));
+    color:#fff;
+    box-shadow: 0 10px 24px -10px rgba(29,53,87,0.55);
+  }
+  .btn-ghost{
+    background:#fff;
+    border:1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .btn-ghost:hover{ background: var(--steam-white); }
+
+  /* ===================== INVOICE / PRINT AREA ===================== */
+  .invoice-wrap{ margin-top: 26px; }
+  .invoice{
+    background: var(--paper);
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(20,30,50,0.04), 0 18px 40px -22px rgba(20,30,50,0.28);
+    border: 1px solid var(--line);
+    padding: 0;
+    overflow:hidden;
+    display:none;
+  }
+  .invoice.show{ display:block; }
+
+  .invoice-head{
+    background: linear-gradient(135deg, var(--indigo-deep), var(--indigo-mid) 60%, var(--soap-blue));
+    color:#fff;
+    padding: 26px 30px 22px;
+    position:relative;
+    overflow:hidden;
+  }
+  .invoice-head::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.16) 1.5px, transparent 1.6px);
+    background-size: 16px 16px;
+    opacity:.5;
+  }
+  .invoice-head-inner{
+    position:relative; z-index:1;
+    display:flex; justify-content:space-between; align-items:flex-start; gap: 14px; flex-wrap:wrap;
+  }
+  .invoice-brand{ display:flex; align-items:center; gap:12px; }
+  .invoice-brand .mark{
+    width:50px; height:50px; border-radius:14px;
+    background: rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.35);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .invoice-brand .mark svg{ width:26px; height:26px; }
+  .invoice-brand h2{ margin:0; font-size:21px; font-weight:800; letter-spacing:.3px; }
+  .invoice-brand span{ font-size:11.5px; opacity:.85; display:block; margin-top:2px; }
+
+  .invoice-meta{ text-align:left; font-size:12px; line-height:1.9; }
+  .invoice-meta .tag{
+    display:inline-block;
+    background: rgba(255,255,255,0.18);
+    border:1px solid rgba(255,255,255,0.35);
+    padding:3px 12px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:11.5px;
+    margin-bottom:6px;
+  }
+  .invoice-meta b{ font-weight:700; }
+
+  .invoice-body{ padding: 22px 30px 8px; }
+
+  .customer-strip{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .customer-strip .cell{
+    background: var(--steam-white);
+    border:1px solid var(--line);
+    border-radius: 12px;
+    padding: 10px 14px;
+  }
+  .customer-strip .cell .lbl{
+    font-size:11px; color: var(--ink-soft); font-weight:600; margin-bottom:3px;
+  }
+  .customer-strip .cell .val{ font-size:14px; font-weight:700; color: var(--ink); }
+
+  table.print-items{
+    width:100%; border-collapse: collapse; margin-bottom: 18px; font-size:13.5px;
+  }
+  table.print-items thead th{
+    background: var(--indigo-deep); color:#fff;
+    padding:10px 10px; font-size:12px; font-weight:700;
+    text-align:center;
+  }
+  table.print-items thead th:first-child{ border-radius: 0; }
+  table.print-items tbody td{
+    padding:10px; border-bottom:1px solid var(--line); text-align:center;
+  }
+  table.print-items tbody td.name-cell{ text-align:right; font-weight:600; }
+  table.print-items tbody tr:nth-child(even){ background:#fbfcfe; }
+  table.print-items tfoot td{
+    padding:10px; font-weight:700;
+  }
+  table.print-items tfoot tr.grand td{
+    border-top: 2px solid var(--indigo-deep);
+    font-size:15px; color: var(--indigo-deep);
+  }
+  table.print-items tfoot td.lbl-cell{ text-align:left; color: var(--ink-soft); font-weight:600; }
+  table.print-items tfoot tr.grand td.lbl-cell{ color: var(--indigo-deep); }
+
+  .note-box{
+    background: var(--steam-white);
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size:12.5px;
+    color: var(--ink-soft);
+    margin-bottom: 22px;
+    min-height: 20px;
+  }
+  .note-box b{ color: var(--ink); }
+
+  /* signature / stamp row */
+  .sign-row{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 4px 0 26px;
+  }
+  .sign-box{
+    text-align:center;
+  }
+  .sign-box .label{
+    font-size:12.5px; font-weight:700; color: var(--ink-soft); margin-bottom: 8px;
+  }
+  .sign-box .pad{
+    height: 86px;
+    border: 1.5px solid var(--line);
+    border-radius: 12px;
+    background:
+      repeating-linear-gradient(135deg, rgba(183,144,63,0.04) 0 8px, transparent 8px 16px);
+    position:relative;
+  }
+  .sign-box.stamp .pad::after{
+    content:"مهر خشکشویی سپید";
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    color: var(--gold-trim);
+    opacity:.35;
+    font-size:11px; font-weight:700;
+    border: 2px dashed rgba(183,144,63,0.45);
+    border-radius:50%;
+    width:78px; height:78px;
+    margin:auto;
+    top:0; bottom:0; left:0; right:0;
+  }
+
+  .invoice-foot{
+    background: var(--steam-white);
+    border-top: 1px solid var(--line);
+    padding: 14px 30px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:8px;
+    font-size:11.5px; color: var(--ink-soft);
+  }
+  .invoice-foot .gold{ color: var(--gold-trim); font-weight:700; }
+
+  .pdf-toolbar{
+    display:flex; gap:10px; justify-content:center;
+    margin-top:18px;
+  }
+
+  /* ===== Toast ===== */
+  .toast{
+    position: fixed; bottom: 24px; left:50%; transform: translateX(-50%) translateY(20px);
+    background: var(--indigo-deep); color:#fff;
+    padding: 12px 22px; border-radius: 12px;
+    font-size:13.5px; font-weight:600;
+    opacity:0; pointer-events:none;
+    transition: opacity .25s, transform .25s;
+    box-shadow: 0 12px 30px -10px rgba(0,0,0,0.4);
+    z-index: 50;
+  }
+  .toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== Responsive ===== */
+  @media (max-width: 640px){
+    .grid2{ grid-template-columns: 1fr; }
+    .customer-strip{ grid-template-columns: 1fr; }
+    .sign-row{ grid-template-columns: 1fr; }
+    .invoice-head-inner{ flex-direction: column; }
+    .invoice-meta{ text-align:right; }
+    table.items thead th:nth-child(1){ display:none; }
+  }
+
+  /* focus visibility */
+  button:focus-visible, input:focus-visible{
+    outline: 2px solid var(--soap-blue);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print{
+    body{ background:#fff; padding:0; }
+    .form-section, .actions, .brand-bar, .pdf-toolbar{ display:none !important; }
+    .invoice-wrap{ margin:0; }
+    .invoice{ box-shadow:none; border:none; border-radius:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <div class="brand-bar">
+    <div class="brand-left">
+      <div class="bubble-mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C9 6 6 9.5 6 13.5C6 17.6 8.7 21 12 21C15.3 21 18 17.6 18 13.5C18 9.5 15 6 12 2Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M9.5 14.5C9.5 16 10.6 17 12 17" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h1>صدور فاکتور — خشکشویی سپید</h1>
+        <p>اطلاعات مشتری و اقلام را وارد کنید، فاکتور را بسازید و PDF بگیرید</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="form-section">
+
+      <div class="section-title"><span class="num">۱</span> اطلاعات مشتری و فاکتور</div>
+      <div class="grid2">
+        <div class="field">
+          <label for="custName">نام مشتری</label>
+          <input id="custName" type="text" placeholder="مثلاً: آقای محمدی" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="custPhone">شماره تماس</label>
+          <input id="custPhone" type="tel" placeholder="09xxxxxxxxx" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="invNo">شماره فاکتور</label>
+          <input id="invNo" type="text" placeholder="مثلاً: 1024">
+        </div>
+        <div class="field">
+          <label for="invDate">تاریخ تحویل گرفتن</label>
+          <input id="invDate" type="date">
+        </div>
+        <div class="field">
+          <label for="deliveryDate">تاریخ تحویل دادن</label>
+          <input id="deliveryDate" type="date">
+        </div>
+        <div class="field">
+          <label for="payStatus">وضعیت پرداخت</label>
+          <select id="payStatus">
+            <option value="پرداخت شده">پرداخت شده</option>
+            <option value="پرداخت نشده" selected>پرداخت نشده</option>
+            <option value="بیعانه دریافت شد">بیعانه دریافت شد</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section-title"><span class="num">۲</span> اقلام خشکشویی</div>
+
+      <div class="items-box">
+        <table class="items">
+          <thead>
+            <tr>
+              <th style="width:34px;">#</th>
+              <th>نوع جنس</th>
+              <th style="width:90px;">تعداد</th>
+              <th style="width:130px;">مبلغ واحد (ریال)</th>
+              <th style="width:130px;">جمع (ریال)</th>
+              <th style="width:38px;"></th>
+            </tr>
+          </thead>
+          <tbody id="itemsBody">
+            <!-- rows injected by JS -->
+          </tbody>
+        </table>
+        <div class="items-toolbar">
+          <button class="add-row-btn" id="addRowBtn" type="button">+ افزودن قلم جدید</button>
+          <div class="quick-total">جمع کل: <b id="liveTotal">0 ریال</b></div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="noteInput">توضیحات (اختیاری)</label>
+        <input id="noteInput" type="text" placeholder="مثلاً: لکه روی یقه پیراهن، اتو ویژه و ...">
+      </div>
+
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-ghost" id="resetBtn" type="button">پاک کردن فرم</button>
+      <button class="btn btn-primary" id="generateBtn" type="button">ساخت فاکتور ↑</button>
+    </div>
+  </div>
+
+  <!-- ===================== INVOICE OUTPUT ===================== -->
+  <div class="invoice-wrap">
+    <div class="invoice" id="invoiceBox">
+      <div id="invoicePrintArea">
+
+        <div class="invoice-head">
+          <div class="invoice-head-inner">
+            <div class="invoice-brand">
+              <div class="mark">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 2C9 6 6 9.5 6 13.5C6 17.6 8.7 21 12 21C15.3 21 18 17.6 18 13.5C18 9.5 15 6 12 2Z" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/>
+                  <path d="M9.5 14.5C9.5 16 10.6 17 12 17" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <h2>خشکشویی سپید</h2>
+                <span>فاکتور رسمی خدمات شست‌وشو و خشکشویی</span>
+              </div>
+            </div>
+            <div class="invoice-meta">
+              <span class="tag" id="payTag">پرداخت نشده</span><br>
+              شماره فاکتور: <b id="outInvNo">—</b><br>
+              تاریخ صدور: <b id="outInvDate">—</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="invoice-body">
+
+          <div class="customer-strip">
+            <div class="cell">
+              <div class="lbl">نام مشتری</div>
+              <div class="val" id="outCustName">—</div>
+            </div>
+            <div class="cell">
+              <div class="lbl">شماره تماس</div>
+              <div class="val" id="outCustPhone">—</div>
+            </div>
+            <div class="cell">
+              <div class="lbl">تاریخ تحویل دادن</div>
+              <div class="val" id="outDeliveryDate">—</div>
+            </div>
+          </div>
+
+          <table class="print-items">
+            <thead>
+              <tr>
+                <th style="width:36px;">#</th>
+                <th>نوع جنس</th>
+                <th style="width:80px;">تعداد</th>
+                <th style="width:140px;">مبلغ واحد (ریال)</th>
+                <th style="width:140px;">جمع (ریال)</th>
+              </tr>
+            </thead>
+            <tbody id="outItemsBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4" class="lbl-cell">جمع جزء</td>
+                <td id="outSubtotal">0 ریال</td>
+              </tr>
+              <tr class="grand">
+                <td colspan="4" class="lbl-cell">مبلغ قابل پرداخت</td>
+                <td id="outGrandTotal">0 ریال</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div class="note-box" id="outNoteBox" style="display:none;">
+            <b>توضیحات: </b><span id="outNoteText"></span>
+          </div>
+
+          <div class="sign-row">
+            <div class="sign-box stamp">
+              <div class="label">مهر خشکشویی سپید</div>
+              <div class="pad"></div>
+            </div>
+            <div class="sign-box">
+              <div class="label">امضای تحویل‌گیرنده</div>
+              <div class="pad"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="invoice-foot">
+          <span>این فاکتور را تا زمان تحویل گرفتن لباس نزد خود نگه دارید.</span>
+          <span class="gold">خشکشویی سپید حس تازگی و طراوت برای شما
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="pdf-toolbar" id="pdfToolbar" style="display:none;">
+      <button class="btn btn-primary" id="downloadPdfBtn" type="button">⬇ دانلود PDF</button>
+      <button class="btn btn-ghost" id="printBtn" type="button">🖨 چاپ مستقیم</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  const itemsBody = document.getElementById('itemsBody');
+  let rowCount = 0;
+
+  function numberToFa(n){
+    return Number(n||0).toLocaleString('fa-IR');
+  }
+
+  function rowTemplate(id){
+    return `
+      <td>${id}</td>
+      <td><input type="text" class="item-name" placeholder="مثلاً: پیراهن" data-role="name"></td>
+      <td><input type="number" min="0" value="1" data-role="qty"></td>
+      <td><input type="number" min="0" step="1000" placeholder="50000" data-role="price"></td>
+      <td class="row-amount" data-role="amount">0</td>
+      <td><button type="button" class="remove-row" title="حذف ردیف" data-role="remove">✕</button></td>
+    `;
+  }
+
+  function addRow(){
+    rowCount++;
+    const tr = document.createElement('tr');
+    tr.dataset.rowId = rowCount;
+    tr.innerHTML = rowTemplate(rowCount);
+    itemsBody.appendChild(tr);
+    reindexRows();
+  }
+
+  function reindexRows(){
+    Array.from(itemsBody.children).forEach((tr, i) => {
+      tr.children[0].textContent = i + 1;
+    });
+  }
+
+  function removeRow(tr){
+    if(itemsBody.children.length <= 1){
+      tr.querySelector('[data-role="name"]').value = '';
+      tr.querySelector('[data-role="qty"]').value = 1;
+      tr.querySelector('[data-role="price"]').value = '';
+      updateRowAmount(tr);
+      return;
+    }
+    tr.remove();
+    reindexRows();
+    updateLiveTotal();
+  }
+
+  function updateRowAmount(tr){
+    const qty = parseFloat(tr.querySelector('[data-role="qty"]').value) || 0;
+    const price = parseFloat(tr.querySelector('[data-role="price"]').value) || 0;
+    const amount = qty * price;
+    tr.querySelector('[data-role="amount"]').textContent = numberToFa(amount) + ' ریال';
+    tr.dataset.amount = amount;
+    updateLiveTotal();
+  }
+
+  function updateLiveTotal(){
+    let total = 0;
+    Array.from(itemsBody.children).forEach(tr => {
+      total += parseFloat(tr.dataset.amount) || 0;
+    });
+    document.getElementById('liveTotal').textContent = numberToFa(total) + ' ریال';
+  }
+
+  itemsBody.addEventListener('input', (e) => {
+    const tr = e.target.closest('tr');
+    if(!tr) return;
+    if(e.target.dataset.role === 'qty' || e.target.dataset.role === 'price'){
+      updateRowAmount(tr);
+    }
+  });
+
+  itemsBody.addEventListener('click', (e) => {
+    if(e.target.dataset.role === 'remove'){
+      removeRow(e.target.closest('tr'));
+    }
+  });
+
+  document.getElementById('addRowBtn').addEventListener('click', addRow);
+
+  // seed with two example-ready rows
+  addRow();
+  addRow();
+  itemsBody.children[0].querySelector('[data-role="name"]').value = 'پیراهن';
+  itemsBody.children[0].querySelector('[data-role="qty"]').value = 2;
+  itemsBody.children[0].querySelector('[data-role="price"]').value = 50000;
+  updateRowAmount(itemsBody.children[0]);
+
+  function todayISO(){
+    const d = new Date();
+    const off = d.getTimezoneOffset();
+    const local = new Date(d.getTime() - off*60000);
+    return local.toISOString().slice(0,10);
+  }
+  document.getElementById('invDate').value = todayISO();
+  document.getElementById('invNo').value = String(Math.floor(1000 + Math.random()*9000));
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function faDate(isoStr){
+    if(!isoStr) return '—';
+    try{
+      const d = new Date(isoStr + 'T00:00:00');
+      return d.toLocaleDateString('fa-IR', { year:'numeric', month:'long', day:'numeric' });
+    }catch(e){ return isoStr; }
+  }
+
+  function collectItems(){
+    const items = [];
+    Array.from(itemsBody.children).forEach(tr => {
+      const name = tr.querySelector('[data-role="name"]').value.trim();
+      const qty = parseFloat(tr.querySelector('[data-role="qty"]').value) || 0;
+      const price = parseFloat(tr.querySelector('[data-role="price"]').value) || 0;
+      if(name && qty > 0){
+        items.push({ name, qty, price, amount: qty*price });
+      }
+    });
+    return items;
+  }
+
+  document.getElementById('generateBtn').addEventListener('click', () => {
+    const items = collectItems();
+    if(items.length === 0){
+      showToast('لطفاً حداقل یک قلم با نام و تعداد معتبر وارد کنید');
+      return;
+    }
+
+    const custName = document.getElementById('custName').value.trim() || '—';
+    const custPhone = document.getElementById('custPhone').value.trim() || '—';
+    const invNo = document.getElementById('invNo').value.trim() || '—';
+    const invDate = document.getElementById('invDate').value;
+    const deliveryDate = document.getElementById('deliveryDate').value;
+    const payStatus = document.getElementById('payStatus').value;
+    const note = document.getElementById('noteInput').value.trim();
+
+    document.getElementById('outCustName').textContent = custName;
+    document.getElementById('outCustPhone').textContent = custPhone;
+    document.getElementById('outInvNo').textContent = invNo;
+    document.getElementById('outInvDate').textContent = faDate(invDate);
+    document.getElementById('outDeliveryDate').textContent = deliveryDate ? faDate(deliveryDate) : 'هماهنگ می‌شود';
+
+    const payTag = document.getElementById('payTag');
+    payTag.textContent = payStatus;
+
+    const outBody = document.getElementById('outItemsBody');
+    outBody.innerHTML = '';
+    let subtotal = 0;
+    items.forEach((it, i) => {
+      subtotal += it.amount;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i+1}</td>
+        <td class="name-cell">${it.name}</td>
+        <td>${numberToFa(it.qty)}</td>
+        <td>${numberToFa(it.price)}</td>
+        <td>${numberToFa(it.amount)} ریال</td>
+      `;
+      outBody.appendChild(tr);
+    });
+
+    document.getElementById('outSubtotal').textContent = numberToFa(subtotal) + ' ریال';
+    document.getElementById('outGrandTotal').textContent = numberToFa(subtotal) + ' ریال';
+
+    const noteBox = document.getElementById('outNoteBox');
+    if(note){
+      document.getElementById('outNoteText').textContent = note;
+      noteBox.style.display = 'block';
+    } else {
+      noteBox.style.display = 'none';
+    }
+
+    document.getElementById('invoiceBox').classList.add('show');
+    document.getElementById('pdfToolbar').style.display = 'flex';
+    document.getElementById('invoiceBox').scrollIntoView({ behavior:'smooth', block:'start' });
+    showToast('فاکتور با موفقیت ساخته شد');
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    document.getElementById('custName').value = '';
+    document.getElementById('custPhone').value = '';
+    document.getElementById('deliveryDate').value = '';
+    document.getElementById('noteInput').value = '';
+    document.getElementById('payStatus').value = 'پرداخت نشده';
+    document.getElementById('invDate').value = todayISO();
+    document.getElementById('invNo').value = String(Math.floor(1000 + Math.random()*9000));
+    itemsBody.innerHTML = '';
+    rowCount = 0;
+    addRow();
+    updateLiveTotal();
+    document.getElementById('invoiceBox').classList.remove('show');
+    document.getElementById('pdfToolbar').style.display = 'none';
+    showToast('فرم پاک شد');
+  });
+
+  document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+  });
+
+  document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+    const el = document.getElementById('invoicePrintArea');
+    const invNo = document.getElementById('outInvNo').textContent.trim();
+    const fname = 'فاکتور-سپید-' + (invNo !== '—' ? invNo : Date.now()) + '.pdf';
+
+    showToast('در حال آماده‌سازی PDF...');
+
+    const opt = {
+      margin:       [6, 6, 6, 6],
+      filename:     fname,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
+      jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(el).save().then(() => {
+      showToast('PDF با موفقیت دانلود شد');
+    }).catch(() => {
+      showToast('خطا در ساخت PDF — از گزینه چاپ استفاده کنید');
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>
